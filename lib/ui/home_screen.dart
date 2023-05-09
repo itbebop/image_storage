@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:image_storage/ui/widget/photo_widget.dart';
-
+import 'package:http/http.dart' as http;
 import '../model/Photo.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _controller = TextEditingController();
-  final List<Photo> photos = [];
+  List<Photo> _photos = [];
 
   Future<List<Photo>> fetch(String querry) async {
     final response = await http.get(Uri.parse(
@@ -21,6 +19,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(response.body);
     Iterable hits = jsonResponse['hits'];
     return hits.map((e) => Photo.fromJson(e)).toList();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -41,12 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: EdgeInsets.all(16.0),
             child: TextField(
+              controller: _controller,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
                 suffixIcon: IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final photos = await fetch(_controller.text);
+                    setState(() {
+                      _photos = photos;
+                    });
+                  },
                   icon: Icon(Icons.search),
                 ),
               ),
@@ -58,15 +68,16 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(
                   16.0), // GridView는 padding 속성 갖고 있어서 직접 줌
               //shrinkWrap: true,
-              itemCount: 10,
+              itemCount: _photos.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
               itemBuilder: (context, index) {
+                final photo = _photos[index];
                 return PhotoWidget(
-                  photo: Photo(),
+                  photo: photo,
                 );
               },
             ),

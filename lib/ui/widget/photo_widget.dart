@@ -4,6 +4,7 @@ import '../../model/Photo.dart';
 
 class PhotoWidget extends StatelessWidget {
   final Photo photo;
+
   const PhotoWidget({Key? key, required this.photo}) : super(key: key);
 
   @override
