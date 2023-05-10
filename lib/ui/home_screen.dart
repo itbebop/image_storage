@@ -1,25 +1,23 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:image_storage/data/photo_provider.dart';
 import 'package:image_storage/ui/widget/photo_widget.dart';
 import 'package:http/http.dart' as http;
+import '../data/api.dart';
 import '../model/Photo.dart';
 
 class HomeScreen extends StatefulWidget {
+
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   final _controller = TextEditingController();
   List<Photo> _photos = [];
-
-  Future<List<Photo>> fetch(String querry) async {
-    final response = await http.get(Uri.parse(
-        'https://pixabay.com/api/?key=36206009-fe028570b3c99a317c543088c&q=$querry&image_type=photo'));
-    Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-    Iterable hits = jsonResponse['hits'];
-    return hits.map((e) => Photo.fromJson(e)).toList();
-  }
 
   @override
   void dispose() {
@@ -29,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final photoProvider = PhotoProvider.of(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 suffixIcon: IconButton(
                   onPressed: () async {
-                    final photos = await fetch(_controller.text);
+                    final photos = await photoProvider.api.fetch(_controller.text);
                     setState(() {
                       _photos = photos;
                     });
