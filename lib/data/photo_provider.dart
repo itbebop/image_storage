@@ -1,19 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
-import 'package:image_storage/data/api.dart';
 
-import '../model/Photo.dart';
+import '../ui/home_view_model.dart';
 
 class PhotoProvider extends InheritedWidget { // InheritedWidget 객체에는 불변 객체만 넣을 수 (노란줄)
-  final PixabayApi api;
+  final HomeViewModel viewModel;
 
-  final _photoStreamController = StreamController<List<Photo>>()..add([]); // ..빈 리스트를 반환 (void를 반환하는 메서드)
-  Stream<List<Photo>> get photoStream => _photoStreamController.stream;
-
-  PhotoProvider({
+  const PhotoProvider({
     Key? key,
-    required this.api,
+    required this.viewModel,
     required Widget child,
   }) : super(key: key, child: child);
 
@@ -23,14 +17,11 @@ class PhotoProvider extends InheritedWidget { // InheritedWidget 객체에는 �
     return result!;
   }
 
-  Future<void> fetch(String querry) async {
-    final result = await api.fetch(querry);
-    _photoStreamController.add(result); // controller로 result가 들어가고 외부에서는 Stream을 통해서 변경사항을 컨트롤
-  }
+
   @override
   // 변경이 되면 다시 전달
   bool updateShouldNotify(PhotoProvider oldWidget) {
-    return oldWidget.api != api;
-    // 이전 상태와 변경이 되었는지 check
+    return true;
+    // 이전 상태와 비교하여 변경이 되었는지 check
   }
 }
