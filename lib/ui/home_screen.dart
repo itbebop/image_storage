@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_storage/data/photo_provider.dart';
 import 'package:image_storage/ui/widget/photo_widget.dart';
 import 'package:http/http.dart' as http;
-import '../data/api.dart';
+import '../data/pixabay_api.dart';
 import '../model/Photo.dart';
 
 class HomeScreen extends StatefulWidget {
