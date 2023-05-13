@@ -4,10 +4,9 @@ import 'package:image_storage/data/photo_provider.dart';
 import 'package:image_storage/ui/widget/photo_widget.dart';
 import 'package:http/http.dart' as http;
 import '../data/pixabay_api.dart';
-import '../model/Photo.dart';
+import '../model/photo.dart';
 
 class HomeScreen extends StatefulWidget {
-
   const HomeScreen({super.key});
 
   @override
@@ -15,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final _controller = TextEditingController();
 
   @override
@@ -64,34 +62,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           StreamBuilder<List<Photo>>(
-            stream: viewModel.photoStream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const CircularProgressIndicator();
-              }
-              final photos = snapshot.data!;
+              stream: viewModel.photoStream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const CircularProgressIndicator();
+                }
+                final photos = snapshot.data!;
 
-              return Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(
-                      16.0), // GridView는 padding 속성 갖고 있어서 직접 줌
-                  //shrinkWrap: true,
-                  itemCount: photos.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
+                return Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(
+                        16.0), // GridView는 padding 속성 갖고 있어서 직접 줌
+                    //shrinkWrap: true,
+                    itemCount: photos.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemBuilder: (context, index) {
+                      final photo = photos[index];
+                      return PhotoWidget(
+                        photo: photo,
+                      );
+                    },
                   ),
-                  itemBuilder: (context, index) {
-                    final photo = photos[index];
-                    return PhotoWidget(
-                      photo: photo,
-                    );
-                  },
-                ),
-              );
-            }
-          ) // 갯수가 정해져있으면 count/ 동적이면 builder
+                );
+              }) // 갯수가 정해져있으면 count/ 동적이면 builder
         ],
       ),
     );

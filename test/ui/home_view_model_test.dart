@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_storage/data/photo_api_repository.dart';
 import 'package:image_storage/data/pixabay_api.dart';
-import 'package:image_storage/model/Photo.dart';
+import 'package:image_storage/model/photo.dart';
 import 'package:image_storage/ui/home_view_model.dart';
 
 void main() {

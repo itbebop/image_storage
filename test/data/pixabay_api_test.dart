@@ -7,21 +7,21 @@ import 'package:mockito/mockito.dart';
 import 'pixabay_api_test.mocks.dart';
 
 @GenerateMocks([http.Client])
-void main(){
+void main() {
   test("Pixabay 데이터를 잘 가져와야 한다", () async {
     final api = PixabayApi();
 
     final client = MockClient();
 
     when(client.get(Uri.parse(
-        '${PixabayApi.baseUrl}?key=${PixabayApi.key}&q=cat&image_type=photo')))
-    .thenAnswer((_) async => http.Response(fakeJsonBody, 200));
+            '${PixabayApi.baseUrl}?key=${PixabayApi.key}&q=cat&image_type=photo')))
+        .thenAnswer((_) async => http.Response(fakeJsonBody, 200));
     final result = await api.fetch("cat", client: client);
-    
+
     expect(result.first.id, 736877);
 
     verifyNever(client.get(Uri.parse(
-          '${PixabayApi.baseUrl}?key=${PixabayApi.key}&q=cat&image_type=photo')));
+        '${PixabayApi.baseUrl}?key=${PixabayApi.key}&q=cat&image_type=photo')));
     // verify와 verifyNever의 차이는?
   });
 }
